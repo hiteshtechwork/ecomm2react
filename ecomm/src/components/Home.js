@@ -9,6 +9,7 @@ const Home = () => {
   const [auth, setAuth] = useState(false);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
+  const [role, setRole] = useState(0); // role: 0-user, 1-developer , 2-admin
 
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const Home = () => {
       if (res.data.Status === "Success") {
         setAuth(true);
         setName(res.data.name);
+        setRole(res.data.role);
       } else {
         setAuth(false);
         navigate("/login");
@@ -54,11 +56,19 @@ const Home = () => {
       <hr />
       <div className="d-flex ">
         <div>
-          <Product />
-          <br />
-          <hr />
-          <br />
-          <AllProducts />
+          {console.log(role)}
+
+          {role === 0 ? <Product /> : ""}
+
+          {role === 1 ? <AllProducts /> : ""}
+
+          {role === 2 ? (
+            <>
+              <Product /> <AllProducts />
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </>

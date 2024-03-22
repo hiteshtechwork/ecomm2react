@@ -53,12 +53,13 @@ app.post("/login", (req, res) => {
       });
     } else {
       const name = data[0].name;
+      const role = data[0].role;
       // console.log(name);
       const isValid = await bcrypt.compare(req.body.password, data[0].password);
       // console.log(isValid);
 
       if (isValid) {
-        const token = jwt.sign({ name }, "our-jsonwebtoken-secret-key", {
+        const token = jwt.sign({ name, role }, "our-jsonwebtoken-secret-key", {
           expiresIn: "1d",
         });
         // console.log(token);
@@ -90,6 +91,7 @@ const verifyUser = (req, res, next) => {
         });
       } else {
         req.name = decoded.name;
+        req.role = decoded.role;
         next();
       }
     });
@@ -98,8 +100,9 @@ const verifyUser = (req, res, next) => {
 
 app.get("/", verifyUser, (req, res) => {
   // const token = req.cookies.token;
+  console.log(req.role);
 
-  return res.json({ Status: "Success", name: req.name });
+  return res.json({ Status: "Success", name: req.name, role: req.role });
 });
 
 // logout
